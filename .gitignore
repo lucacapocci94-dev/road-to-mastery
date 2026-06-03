@@ -1,0 +1,7 @@
+# Cache di Python / pytest — non vanno nel repo pubblico
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Log degli hook (generati a runtime nella cartella-studente)
+.road-to-mastery.log

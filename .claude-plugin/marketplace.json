@@ -1,0 +1,12 @@
+{
+  "name": "road-to-mastery",
+  "owner": { "name": "Luca Capocci" },
+  "description": "Marketplace del motore-tutor Road to Mastery.",
+  "plugins": [
+    {
+      "name": "road-to-mastery",
+      "source": "./plugins/road-to-mastery",
+      "description": "Motore-tutor per la preparazione a qualsiasi esame."
+    }
+  ]
+}
