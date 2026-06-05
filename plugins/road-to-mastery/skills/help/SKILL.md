@@ -14,6 +14,14 @@ nome se disponibile in `CLAUDE.md` / `stato/progressi.md`.
 
 **Ecco tutto quello che puoi fare:**
 
+> 💡 **Come si scrivono i comandi.** Essendo un plugin, ogni comando porta davanti
+> il nome `road-to-mastery`. Forma completa: `/road-to-mastery:organizza`,
+> `/road-to-mastery:tutor`, e così via. In pratica ti basta digitare `/` e l'inizio
+> del nome (es. `/organ…`) e **scegliere dal menu** la versione completa. In più
+> puoi semplicemente dirmi a parole cosa vuoi (es. "ho una nuova materia da
+> preparare") e faccio partire io il comando giusto. Sotto li scrivo in forma corta
+> per leggerli meglio.
+
 ### 🚀 Configura il tuo studio
 - `/organizza` — prepara la cartella per un esame: crea programma e file di stato,
   e aggiunge una nuova materia
