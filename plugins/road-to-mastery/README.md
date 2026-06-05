@@ -26,6 +26,8 @@ Motore-tutor distribuibile. Fornisce:
 | `/testa` | verifica delle conoscenze pregresse su un modulo |
 | `/interrogazione` | domande sul già studiato, priorità ai punti deboli |
 | `/simulazione` | prova d'esame realistica su tutto il programma |
+| `/infittisci` | approfondisce il programma su più livelli, un sub-agente per sezione, poi fonde |
+| `/carico` | carico di studio giornaliero e semaforo di fattibilità rispetto alla data |
 | `/modalita` | passa tra micro (5-10 min) e standard (30-90 min) |
 | `/programma` | mostra il programma con lo stato delle lezioni |
 | `/avanzamento` | progressi per materia, ripassi dovuti, copertura del syllabus |

@@ -24,6 +24,16 @@ nome se disponibile in `CLAUDE.md` / `stato/progressi.md`.
 - `/programma moduli` — solo i moduli, visione veloce
 - `/programma 3` — solo le lezioni del Modulo 3
 
+### 🧱 Approfondisci il programma
+- `/infittisci` — rende il programma più denso e profondo (più lezioni, stessa
+  durata), facendo lavorare uno specialista per ogni sezione
+- `/infittisci 3` — approfondisce solo il Modulo 3
+  *Usa i livelli: base → approfondimento → padronanza*
+
+### 📊 Quanto studiare al giorno
+- `/carico` — quante lezioni e minuti al giorno servono per arrivare pronto, con
+  semaforo di fattibilità rispetto alla data
+
 ### 📈 I tuoi progressi
 - `/avanzamento` — percentuali per materia, ripassi dovuti, copertura del syllabus
 - `/avanzamento 1` — dettaglio del Modulo 1 (o qualsiasi numero)
