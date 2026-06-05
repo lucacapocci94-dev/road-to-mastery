@@ -51,6 +51,8 @@ nome se disponibile in `CLAUDE.md` / `stato/progressi.md`.
 - `/tutor` — continua dalla lezione dove hai lasciato
 - `/tutor 3.2a` — vai direttamente a una lezione specifica
 - `/tutor <materia>` — studia un'altra materia
+- `/raddrizza` — se va troppo veloce o troppo in superficie, ferma e approfondisci
+  il punto dove sei (anche "più esteso" o "non ho capito" funzionano)
 
 ### ✏️ Mettiti alla prova
 - `/interrogazione` — domande su quello che hai già studiato (severa ma giusta)
