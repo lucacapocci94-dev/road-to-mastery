@@ -1,4 +1,21 @@
+import json
+import subprocess
+import sys
+from pathlib import Path
+
 import carica_e_riconcilia as h
+
+HOOK = Path(h.__file__)
+
+
+def _run_hook(payload):
+    p = subprocess.run(
+        [sys.executable, str(HOOK)],
+        input=json.dumps(payload),
+        capture_output=True,
+        text=True,
+    )
+    return json.loads(p.stdout)["hookSpecificOutput"]
 
 
 def test_cartella_vuota_suggerisce_organizza(tmp_path):
@@ -48,3 +65,29 @@ def test_titolo_piu_sessioni_aperte(studente):
     assert "matematica: Lezione 3.2a — Le frazioni" in titolo
     assert "storia: Lezione 1.1a — Roma" in titolo
     assert " · " in titolo
+
+
+def test_hook_imposta_titolo_se_senza_nome(studente):
+    (studente / "materie" / "matematica" / "sessione_corrente.md").write_text(
+        "# Lezione 3.2a — Le frazioni\n"
+    )
+    out = _run_hook({"cwd": str(studente), "source": "resume"})
+    assert out["sessionTitle"] == "matematica: Lezione 3.2a — Le frazioni"
+
+
+def test_hook_non_sovrascrive_nome_manuale(studente):
+    (studente / "materie" / "matematica" / "sessione_corrente.md").write_text(
+        "# Lezione 3.2a — Le frazioni\n"
+    )
+    out = _run_hook(
+        {"cwd": str(studente), "source": "resume", "session_title": "Ripasso mio"}
+    )
+    assert "sessionTitle" not in out
+
+
+def test_hook_niente_titolo_su_compact(studente):
+    (studente / "materie" / "matematica" / "sessione_corrente.md").write_text(
+        "# Lezione 3.2a — Le frazioni\n"
+    )
+    out = _run_hook({"cwd": str(studente), "source": "compact"})
+    assert "sessionTitle" not in out

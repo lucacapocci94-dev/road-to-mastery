@@ -90,8 +90,11 @@ def main():
         }
     }
     # sessionTitle è onorato solo per startup/resume (ignorato su clear/compact):
-    # lo impostiamo sulla lezione aperta così la sessione è ritrovabile.
-    if source in ("", "startup", "resume"):
+    # lo impostiamo sulla lezione aperta così la sessione è ritrovabile —
+    # MA solo se la sessione non ha già un nome esplicito (dato a mano dallo
+    # studente con --name o /rename): un titolo scelto a mano non va mai
+    # sovrascritto.
+    if source in ("", "startup", "resume") and not (data.get("session_title") or "").strip():
         titolo = session_title(root)
         if titolo:
             output["hookSpecificOutput"]["sessionTitle"] = titolo
