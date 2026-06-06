@@ -131,24 +131,26 @@ prima padronanza di ogni lezione).
 
 ---
 
-## Passo 8 — La scelta sulla profondità (lo stesso motore, ma decide lo studente)
+## Passo 8 — La scelta sulla profondità (sempre, e la decide lo studente)
 
-La base è pronta. Se il **Livello-obiettivo** è più alto di "base", **non
-approfondire d'iniziativa**: proponi la scelta, perché il giro pesante è lungo e a
-questo punto lo studente non sa ancora dove gli servirà davvero più profondità.
+La base è pronta. Se il **Livello-obiettivo** è più alto di "base", **proponi
+sempre la scelta** e **non decidere tu**: presenta le due strade in modo neutro,
+con i loro fatti, senza spingere verso una delle due. (Se il livello scelto è
+"base", non c'è nulla da approfondire: salta questo passo.)
 
 Di' qualcosa come:
 > "La base è pronta, puoi già studiare. Visto che punti a **[livello-obiettivo]**,
 > come preferisci arrivarci?
-> - **Strada facendo (consigliato):** parti subito e approfondiamo dove serve,
->   man mano, con `/infittisci` o `/raddrizza` sul momento. Niente attese.
+> - **Strada facendo:** parti subito e approfondiamo dove serve, man mano, con
+>   `/infittisci` o `/raddrizza` sul momento. Inizi adesso, niente attese.
 > - **Subito, tutto:** mando ora la squadra di specialisti a portare l'intero
->   programma a quel livello. È più completo da subito, ma **richiede parecchi
+>   programma a quel livello. Più completo da subito, ma **richiede parecchi
 >   minuti** ed è interrompibile (riprende da dove si ferma)."
 
-- Se sceglie **strada facendo** → chiudi qui (è il default sano).
-- Se sceglie **subito, tutto** → avvia il motore di `/infittisci` sull'intero
-  programma al livello-obiettivo (con foglio di lavoro, ondate di 3, ripartenza).
+Aspetta la sua risposta — entrambe sono scelte legittime:
+- **strada facendo** → chiudi qui;
+- **subito, tutto** → avvia il motore di `/infittisci` sull'intero programma al
+  livello-obiettivo (con foglio di lavoro, ondate di 3, ripartenza), poi `/carico`.
 
 📍 Adesso puoi:
 - iniziare a studiare con `/tutor`
