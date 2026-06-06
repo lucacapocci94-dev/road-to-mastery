@@ -29,9 +29,14 @@ diverso a parole, usa quello.
 ## Fase 3 — Raddrizzamento strutturale (solo se la lacuna è vera)
 Se ti accorgi che il programma **in sé** è troppo rapido su quel punto (non è solo
 un chiarimento momentaneo), rendilo denso anche per il futuro, riusando il motore
-di `/infittisci` **sulla sola sezione corrente**:
-- spezza quel concetto in una o più micro-lezioni aggiuntive da 5-10 min;
-- inseriscile in `materie/<materia>/programma-micro.md` al punto giusto,
+di `/infittisci` **sulla sola sezione corrente** (qui basta **un** specialista, non
+serve l'ondata):
+- lo specialista cerca sul web quanto serve e spezza il concetto in una o più
+  micro-lezioni aggiuntive da 5-10 min, fino a che la sezione **regge l'esame** al
+  livello giusto (anti-banalità) — non si ferma "alla prima";
+- scrive su un foglio `materie/<materia>/_lavori/<sezione>.md` (così, se interrompi,
+  riprende da lì invece di rifare da capo);
+- inserisci le nuove micro-lezioni in `programma-micro.md` al punto giusto,
   rinumerando con coerenza e **preservando i progressi** già fatti;
 - aggiorna `sincronizzazione.md` (copertura) e `stato/progressi.md`.
 - Per un approfondimento ampio di tutta la sezione, rimanda a

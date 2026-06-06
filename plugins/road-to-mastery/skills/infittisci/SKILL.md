@@ -1,15 +1,14 @@
 ---
 name: infittisci
-description: Approfondisce ("infittisce") il programma di una materia su più livelli di profondità, senza allungare la durata delle micro-lezioni né spostare la data d'esame. Lavora a squadra — lancia un sub-agente per ogni sezione, che cerca sul web SOLO la sua parte, la espande in micro-lezioni dense e supera un controllo anti-banalità, poi fonde tutti i blocchi in un programma unico e ricalcola la copertura del syllabus e il carico di studio.
+description: Approfondisce ("infittisce") il programma di una materia su più livelli di profondità, senza allungare la durata delle micro-lezioni né spostare la data d'esame. Lavora a squadra — uno specialista per sezione cerca sul web SOLO la sua parte e la espande finché regge l'esame, scrivendo su un foglio di lavoro così il processo è ripartibile; poi fonde tutti i blocchi in un programma unico e ricalcola la copertura del syllabus e il carico di studio.
 ---
 
 # /infittisci — Approfonditore del programma a squadra
 
 `/organizza` costruisce lo scheletro di base. `/infittisci` lo rende **denso ed
-esaustivo** su più livelli, facendo lavorare un sub-agente specializzato per ogni
-sezione. Vincoli fermi: **stessa durata** delle micro-lezioni (5-10 min) e
-**stessa data d'esame** — l'unica cosa che cresce è la profondità (e quindi il
-carico giornaliero, che misuriamo con `/carico`).
+esaustivo** su più livelli, facendo lavorare uno specialista per ogni sezione.
+Vincoli fermi: **stessa durata** delle micro-lezioni (5-10 min) e **stessa data
+d'esame** — cresce solo la profondità (e quindi il carico, che misura `/carico`).
 
 ## Risoluzione della materia
 Argomento esplicito → materia attiva in `stato/progressi.md` → altrimenti chiedi.
@@ -20,55 +19,79 @@ Se `materie/<materia>/sessione_corrente.md` non è vuoto, consolidalo in
 `stato/progressi.md` e svuotalo.
 
 ## Fase 1 — Ambito e livello
-Interpreta il comando:
-- `/infittisci` → tutto il programma
-- `/infittisci 3` → solo il modulo 3
-- `/infittisci 3.2` → solo la sezione 3.2
-- **Livello di profondità** (esplicito o a parole, es. "più esteso", "di più"):
-  - **Livello 1 — base**: definizione, esempio, cosa è.
-  - **Livello 2 — approfondimento**: casi particolari, eccezioni, normativa di
-    dettaglio, esempi multipli.
-  - **Livello 3 — padronanza**: collegamenti interdisciplinari, applicazioni,
-    insidie d'esame — lo studente "vede il mondo e collega ogni pezzo".
+- `/infittisci 3` → modulo 3 · `/infittisci 3.2` → sezione 3.2
+- `/infittisci` senza ambito → **chiedi se vuole una sezione/un modulo o tutto il
+  programma**, e avvisa che "tutto" è un lavoro lungo (default prudente: non
+  partire sull'intero programma senza conferma).
+- **Livello**: 1 base · 2 approfondimento · 3 padronanza (collegamenti, insidie
+  d'esame — "vedi il mondo e colleghi ogni pezzo").
 
-Leggi `materie/<materia>/programma-micro.md`, `sincronizzazione.md` e il syllabus
-in `materie/<materia>/materiali/` per sapere com'è fatto il programma attuale.
+Leggi `programma-micro.md`, `sincronizzazione.md` e il syllabus in `materiali/`
+per sapere com'è fatto il programma attuale e quali sezioni rientrano nell'ambito.
 
-## Fase 2 — Lavoro a squadra (un sub-agente per sezione)
-Per **ogni sezione nell'ambito**, lancia un sub-agente dedicato (strumento Agent /
-Task), così ognuno lavora a **contesto pulito** e non si diluisce con gli altri.
-Istruzioni per ogni "specialista di sezione":
+## Fase 2 — La squadra (con foglio di lavoro e ripartenza)
 
-1. **Ricerca web obbligatoria, solo sulla sua sezione**, su fonti aggiornate e
-   autorevoli (normative con anno, programmi ufficiali, domande tipiche d'esame).
+### Il foglio di lavoro (perché il processo sia ripartibile)
+Ogni sezione ha un suo file in `materie/<materia>/_lavori/<sezione>.md`. È la
+**lavagna condivisa**: ciò che è scritto lì sopravvive a un'interruzione, ciò che
+resta solo nella testa di uno specialista no. In testa al file, un campo
+**Stato: in corso | completato**.
+
+### Ripartenza intelligente (prima di lanciare chiunque)
+Per ogni sezione nell'ambito, guarda il suo foglio di lavoro:
+- **Stato completato** → salta, è già fatta.
+- **assente o "in corso"** → va (ri)lavorata.
+Così, se una sessione precedente è stata interrotta, si rifà **solo ciò che
+manca**, mai tutto da capo.
+
+### Lavoro a ondate
+Lancia gli specialisti **a gruppi di massimo 3 per volta** (sub-agenti, strumento
+Agent/Task), così la macchina non si ingolfa. Quando un gruppo finisce, parte il
+successivo, fino a esaurire le sezioni da lavorare. Riferisci l'avanzamento
+("sezione 3 fatta · 4 in corso").
+
+### Istruzioni per ogni specialista di sezione
+1. **Ricerca web mirata, solo sulla tua sezione**, su fonti aggiornate e
+   autorevoli. **Nessun tetto al numero di ricerche**: cerca quanto serve per
+   coprire bene tutto l'importante.
 2. **Espandi** la sezione in micro-lezioni da 5-10 min al livello richiesto,
-   coprendo **tutti** i sotto-aspetti (niente buchi).
-3. **Controllo anti-banalità**: verifica che la sezione, a quel livello, regga il
-   livello reale dell'esame; se è troppo leggera, aggiungi ciò che manca.
-4. **Restituisci solo il blocco** della sezione: codici lezione, titoli, ancora
-   mnemonica e mappatura ai punti di syllabus. **Non** il contenuto disteso delle
-   lezioni (quello si genera a runtime con `/tutor`).
+   coprendo **tutti** i sotto-aspetti.
+3. **Traguardo (quando hai finito)**: quando la sezione è **completa e profonda al
+   livello scelto e regge l'esame vero** (controllo **anti-banalità**) — *non*
+   "una lezione e via". Il "almeno una micro-lezione per punto del syllabus" è solo
+   la **rete di sicurezza** minima, mai il punto d'arrivo.
+4. **Scrivi man mano** sul tuo foglio `_lavori/<sezione>.md` (codici lezione,
+   titoli, ancora mnemonica, mappatura ai punti di syllabus). Quando hai davvero
+   finito, metti **Stato: completato**.
+5. **Salta-l'intoppo**: se una singola ricerca web non torna o si pianta, cambia
+   domanda e prosegui — non restare appeso a quella.
+
+> **Tempo = sveglia, non ghigliottina.** Un budget di tempo serve solo ad accorgersi
+> se uno specialista **non fa più progressi** (foglio fermo): in quel caso lo si
+> rilancia su quella sezione. Chi sta ancora producendo non va mai interrotto.
 
 ## Fase 3 — Fusione (coordinatore)
-1. **Fondi** i blocchi restituiti dentro `programma-micro.md`, rinumerando in modo
-   coerente.
+Quando tutte le sezioni dell'ambito sono **Stato: completato**:
+1. **Fondi** i blocchi dai fogli `_lavori/` dentro `programma-micro.md`,
+   rinumerando in modo coerente.
 2. **Preserva i progressi**: le lezioni già `✓ completata` / `⚠ punto debole`
-   devono restare tali. Tieni una mappatura vecchio→nuovo codice e aggiorna
-   `stato/progressi.md` di conseguenza. Non azzerare mai ciò che è già fatto.
-3. **Aggiorna `sincronizzazione.md`** (libro mastro della copertura): ogni punto
-   di syllabus deve mappare su ≥1 micro-lezione. Segnala buchi residui.
-4. Esegui il validatore: `python3 ${CLAUDE_PLUGIN_ROOT}/tools/valida_contratto.py .`
+   restano tali (tieni una mappatura vecchio→nuovo codice e aggiorna
+   `stato/progressi.md`). Non azzerare mai ciò che è già fatto.
+3. **Aggiorna `sincronizzazione.md`** (copertura): ogni punto di syllabus mappa su
+   ≥1 micro-lezione; segnala eventuali buchi residui.
+4. Esegui `python3 ${CLAUDE_PLUGIN_ROOT}/tools/valida_contratto.py .`.
+5. A fusione riuscita, i fogli in `_lavori/` possono essere svuotati (servono solo
+   come rete per la ripartenza).
 
 ## Fase 4 — Prezzo in tempo (sempre)
 Esegui subito `/carico` per la materia: l'infittimento ha aumentato le lezioni,
-quindi mostra il nuovo carico giornaliero e il semaforo di fattibilità rispetto
-alla data. Così lo studente vede subito quanto costa, in tempo, l'approfondimento.
+quindi mostra il nuovo carico giornaliero e il semaforo rispetto alla data.
 
 ## Fase 5 — Riepilogo
 ```
 🧱 Programma infittito — [materia] — Livello [N]
 
-Sezioni approfondite: [elenco]
+Sezioni approfondite: [elenco]   (ripartenza: [n] già fatte e saltate)
 Micro-lezioni: prima X → ora Y (+Z)
 Copertura syllabus: [tutto coperto / N punti ancora scoperti]
 Anti-banalità: [ok / rinforzata su: ...]
@@ -77,4 +100,4 @@ Anti-banalità: [ok / rinforzata su: ...]
 📍 Adesso puoi:
 - vedere il nuovo carico con `/carico`
 - iniziare ad approfondire con `/tutor`
-- alleggerire tornando indietro (chiedimi di ridurre il livello di una sezione)
+- se interrotto, **ridai `/infittisci`**: riprende solo le sezioni mancanti
