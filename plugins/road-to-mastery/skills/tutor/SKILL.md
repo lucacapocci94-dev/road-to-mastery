@@ -47,6 +47,12 @@ Integra i risultati. Normative/dati: cita anno e fonte con precisione.
 Prima di generare la lezione, registra: materia, lezione X.Xa + titolo, data,
 punto raggiunto = "inizio", note = "—".
 
+La **prima riga** del file dev'essere un'intestazione leggibile nel formato
+`# Lezione X.Xa — <titolo lezione>`: l'hook di avvio la usa come **titolo della
+sessione**, così lo studente ritrova la sessione col nome della lezione quando la
+riapre. (Claude Code può intitolare la sessione solo all'apertura/resume, non a
+metà: il titolo compare/si aggiorna alla riapertura della sessione.)
+
 ### 2c. Genera la lezione
 - Parti dal **concreto** (esempio pratico) → poi la teoria.
 - Ancora mnemonica.
