@@ -1,0 +1,8 @@
+{
+  "name": "hackathon-helper",
+  "description": "Regia della giornata di un hackathon a coppie: parti veloce, gestisci il tempo, arriva alla demo. Pensato per Claude Code.",
+  "version": "0.1.0",
+  "skills": [
+    "./skills/setup-team-repo"
+  ]
+}
