@@ -7,7 +7,7 @@ per la preparazione a qualsiasi esame.
 
 ```
 /plugin marketplace add lucacapocci94-dev/road-to-mastery
-/plugin install road-to-mastery@luca-marketplace
+/plugin install road-to-mastery@road-to-mastery
 ```
 
 Aggiornamenti: `/plugin update`.
