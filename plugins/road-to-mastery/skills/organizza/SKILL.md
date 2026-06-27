@@ -68,7 +68,8 @@ Crea (solo ciò che manca):
 CLAUDE.md                      ← dal template del plugin (Passo 5)
 stato/
 ├── progressi.md               ← registro globale (materia attiva, %, punti deboli, calendario ripassi)
-└── preferenze.md              ← tono/metodo dello studente
+├── preferenze.md              ← tono/metodo dello studente
+└── diario.md                  ← registro in italiano semplice delle tappe (lo aggiorna il motore da solo)
 materie/<slug-materia>/
 ├── materiali/                 ← qui va SOLO il syllabus ufficiale (leggero)
 ├── programma.md               ← struttura standard (no contenuti)
@@ -80,6 +81,11 @@ materie/<slug-materia>/
 
 Lo `<slug-materia>` è una versione semplice e minuscola del nome (es.
 "Diritto costituzionale" → `diritto-costituzionale`).
+
+Crea `stato/diario.md` con un'intestazione e una prima riga-tappa
+(`- [oggi] · [materia] · cartella di studio allestita`): da qui in poi ogni skill
+vi aggiunge una riga in automatico, ed è il file che l'avvio rilegge per dirti
+"dove sei rimasto".
 
 ---
 
@@ -154,6 +160,9 @@ Aspetta la sua risposta — entrambe sono scelte legittime:
 
 📍 Adesso puoi:
 - iniziare a studiare con `/tutor`
+- partire **operativo subito** (80/20) con `/operativo`
+- fissare un risultato preciso entro una scadenza con `/obiettivo`
 - vedere il programma con `/programma`
 - approfondire quando vuoi con `/infittisci`
 - vedere il carico giornaliero con `/carico`
+- rivedere il percorso quando vuoi con `/diario`
