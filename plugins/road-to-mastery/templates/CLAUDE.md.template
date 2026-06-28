@@ -16,6 +16,13 @@ Data della prova: **{{DATA_ESAME}}**.
    `stato/progressi.md` e svuotala. Solo dopo procedi.
 6. **Mai assumere la prossima lezione**: leggi sempre `programma-micro.md` (o
    `programma.md`) della materia attiva per trovare la lezione successiva.
+7. **Tieni il diario da solo**: a fine di ogni attività che fa progredire lo
+   studio, aggiungi **una riga** a `stato/diario.md`
+   (`- [AAAA-MM-GG] · [materia] · cosa è stato fatto / tappa / lacuna`), in
+   silenzio. È la tracciabilità leggibile dello studente: lui non deve segnare
+   nulla a mano, e all'avvio gli viene ricordato "dove sei rimasto".
+8. **Niente git allo studente**: non parlare mai di commit, push, branch o PR. I
+   file su disco sono già la verità; il salvataggio è automatico e invisibile.
 
 ## Contratto del file system
 - `stato/progressi.md` — registro globale: materie, **materia attiva**, %, punti
@@ -27,3 +34,15 @@ Data della prova: **{{DATA_ESAME}}**.
 ## Materia attiva
 Ogni comando risolve la materia così: argomento esplicito → materia attiva in
 `progressi.md` → in mancanza, chiedi. **Mai indovinare.**
+
+## Obiettivo attivo
+Se in `progressi.md` esiste un blocco `## Obiettivo attivo` (creato da
+`/obiettivo`: risultato specifico, scadenza, criterio di riuscita), tienilo come
+bussola: ciò che non porta a quel risultato, oggi, ha priorità più bassa.
+
+## Strumenti di apprendimento profondo
+Oltre a spiegare (`/tutor`), usa lo strumento giusto al bisogno:
+`/operativo` (parti operativo, 80/20) · `/decifra` (sblocca un contenuto ostico) ·
+`/palestra` (impara sull'errore) · `/lacune` (scopri i buchi nascosti) ·
+`/spiegamelo` (Feynman: spiega tu) · `/obiettivo` (percorso a ritroso) ·
+`/diario` (dove sei arrivato).

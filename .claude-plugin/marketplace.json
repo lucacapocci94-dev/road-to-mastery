@@ -7,6 +7,20 @@
       "name": "road-to-mastery",
       "source": "./plugins/road-to-mastery",
       "description": "Motore-tutor per la preparazione a qualsiasi esame."
+    },
+    {
+      "name": "mattpocock-skills",
+      "source": {
+        "source": "github",
+        "repo": "mattpocock/skills"
+      },
+      "description": "Skill di Matt Pocock (ingegneria del software): grilling implacabile su piani e design, grill-with-docs, tdd, diagnosi bug e altro. Plugin di terze parti, ridistribuito qui solo come voce di catalogo.",
+      "author": { "name": "Matt Pocock" },
+      "license": "MIT",
+      "homepage": "https://github.com/mattpocock/skills",
+      "repository": "https://github.com/mattpocock/skills",
+      "category": "engineering",
+      "tags": ["grilling", "engineering", "third-party"]
     }
   ]
 }

@@ -1,0 +1,13 @@
+{
+  "extraKnownMarketplaces": {
+    "road-to-mastery": {
+      "source": {
+        "source": "github",
+        "repo": "lucacapocci94-dev/road-to-mastery"
+      }
+    }
+  },
+  "enabledPlugins": {
+    "mattpocock-skills@road-to-mastery": true
+  }
+}

@@ -26,6 +26,10 @@ nome se disponibile in `CLAUDE.md` / `stato/progressi.md`.
 - `/organizza` — prepara la cartella per un esame: crea programma e file di stato,
   e aggiunge una nuova materia
   *Usalo la prima volta, o quando vuoi aggiungere una materia*
+- `/obiettivo` — parti dal **risultato** che vuoi e dalla **scadenza**: ti
+  costruisco un percorso a ritroso, un compito al giorno con criterio di riuscita
+  e cosa NON fare
+  *Usalo quando hai una meta precisa entro una data, non solo "studiare X"*
 
 ### 📚 Consulta il programma
 - `/programma` — vedi tutto il programma con moduli e lezioni
@@ -62,9 +66,25 @@ nome se disponibile in `CLAUDE.md` / `stato/progressi.md`.
 - `/raddrizza` — se va troppo veloce o troppo in superficie, ferma e approfondisci
   il punto dove sei (anche "più esteso" o "non ho capito" funzionano)
 
+### ⚡ Impara in modo profondo (per qualsiasi argomento, anche da zero)
+- `/operativo <argomento>` — diventa operativo in fretta: cosa imparare per primo,
+  cosa ignorare adesso, l'unico esercizio che ti mette già avanti
+- `/decifra <incolla o argomento>` — un testo ti confonde? Trovo l'idea-chiave con
+  un'analogia semplice e ti interrogo finché non l'hai capita davvero
+- `/palestra <concetto>` — niente spiegazione: ti metto in situazioni reali, ti
+  faccio sbagliare e ti incalzo finché non lo fai senza esitare
+- `/spiegamelo <argomento>` — spieghi tu, come a un bambino di 10 anni; ti fermo a
+  ogni termine, salto o semplificazione sbagliata, e ti dico cosa non è solido
+
 ### ✏️ Mettiti alla prova
 - `/interrogazione` — domande su quello che hai già studiato (severa ma giusta)
 - `/simulazione` — simulazione dell'esame vero, su tutto il programma
+- `/lacune <argomento>` — credi di saperlo già? 5 domande che smontano l'eccesso di
+  sicurezza ed espongono i buchi nascosti, senza sconti
+
+### 🗒️ Dove sei arrivato
+- `/diario` — la linea del tempo del tuo studio: cosa hai fatto, le tappe, dove
+  sei ora. Si aggiorna da solo: tu non devi segnare niente
 
 ---
 
@@ -74,6 +94,7 @@ nome se disponibile in `CLAUDE.md` / `stato/progressi.md`.
 
 **Come funziona una lezione:** spiegazione interattiva durante la sessione +
 verifica differita (ripasso dilazionato) all'inizio della sessione successiva.
-Tutto si salva da solo: non devi pensarci.
+Tutto si salva da solo: non devi pensarci, e non devi sapere niente di file o di
+git. Quando riapri, ti ricordo io dove eri rimasto (`/diario` per la storia completa).
 
 Per rivedere questa guida in qualsiasi momento: scrivi `/help`.
