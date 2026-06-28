@@ -3,8 +3,7 @@
     "road-to-mastery": {
       "source": {
         "source": "github",
-        "repo": "lucacapocci94-dev/road-to-mastery",
-        "ref": "claude/grill-me-plugin-enhancement-lkh0xb"
+        "repo": "lucacapocci94-dev/road-to-mastery"
       }
     }
   },
