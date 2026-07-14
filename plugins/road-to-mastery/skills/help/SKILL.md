@@ -42,6 +42,15 @@ nome se disponibile in `CLAUDE.md` / `stato/progressi.md`.
 - `/infittisci 3` — approfondisce solo il Modulo 3
   *Usa i livelli: base → approfondimento → padronanza*
 
+### 🔄 Aggiorna il programma quando la materia cambia
+- `/rinnova` — quando la materia stessa è cambiata (una tecnologia si è evoluta,
+  il syllabus è stato rivisto, un concetto o un uso è cambiato): aggiorna il
+  programma aggiungendo, modificando e rimuovendo, senza perderti i progressi
+- `/rinnova 3` — rinnova solo il Modulo 3
+  *Dammi tu le fonti (linee guida, documenti, link) o le cerco io. Ti mostro
+  sempre il piano prima, e le rimozioni partono solo se confermi. Diverso da
+  `/infittisci`, che approfondisce senza cambiare i concetti né togliere*
+
 ### 📊 Quanto studiare al giorno
 - `/carico` — quante lezioni e minuti al giorno servono per arrivare pronto, con
   semaforo di fattibilità rispetto alla data
