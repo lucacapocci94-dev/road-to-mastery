@@ -80,3 +80,27 @@ def test_materia_inesistente_fallisce(tmp_path):
         assert False, "doveva fallire"
     except SystemExit:
         pass
+
+
+def test_sicurezza_dest_dentro_src_fallisce(tmp_path):
+    """La destinazione dentro la cartella-studente deve essere rifiutata:
+    è la rete di sicurezza contro l'azzeramento dei dati dell'utente."""
+    src = _studente(tmp_path / "src")
+    try:
+        pc.prepara(src, src / "sub" / "pkg", ["diritto"])
+        assert False, "doveva rifiutarsi di scrivere dentro la sorgente"
+    except SystemExit:
+        pass
+    # la sorgente non è stata toccata
+    assert "completata" in (src / "materie" / "diritto" / "programma.md").read_text()
+
+
+def test_sorgente_non_modificata(tmp_path):
+    """Dopo la preparazione, la cartella-studente resta identica."""
+    src = _studente(tmp_path / "src")
+    prima = (src / "materie" / "diritto" / "programma.md").read_text()
+    sess = (src / "materie" / "diritto" / "sessione_corrente.md").read_text()
+    pc.prepara(src, tmp_path / "pkg", ["diritto"])
+    assert (src / "materie" / "diritto" / "programma.md").read_text() == prima
+    assert (src / "materie" / "diritto" / "sessione_corrente.md").read_text() == sess
+    assert (src / "materie" / "storia").exists()  # altra materia intatta

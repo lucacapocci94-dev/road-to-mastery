@@ -1,58 +1,45 @@
 ---
 name: aggiornami
-description: Controlla se sul marketplace c'è una versione più recente del plugin road-to-mastery e ti guida all'aggiornamento, mostrandoti cosa è cambiato. Aggiorna il MOTORE del tutor (i comandi, gli hook), non il tuo programma di studio — per quello ci sono /rinnova e /infittisci. È un aiuto amichevole sopra al comando nativo di Claude Code /plugin update.
+description: Aggiorna il plugin road-to-mastery all'ultima versione. Rinfresca il marketplace, confronta la versione in uso con quella disponibile e, se ce n'è una nuova, la installa e ti dice cosa è cambiato. Aggiorna il MOTORE del tutor (i comandi, gli hook), non il tuo programma di studio — per quello ci sono /rinnova e /infittisci.
 ---
 
 # /aggiornami — Aggiorna il plugin all'ultima versione
 
-Il motore del tutor (comandi e hook) vive nel plugin `road-to-mastery`, che si
-installa dal marketplace. Ogni tanto esce una versione nuova con comandi o
-migliorie. `/aggiornami` controlla se ce n'è una e ti accompagna ad installarla,
-dicendoti **cosa cambia**.
+Il motore del tutor (comandi e hook) vive nel plugin `road-to-mastery`. Ogni tanto
+esce una versione nuova. `/aggiornami` fa tutto il giro: **rinfresca il
+marketplace**, controlla se c'è una versione più recente e — se c'è — la
+**installa** e ti dice cosa cambia.
 
-> Da non confondere: `/aggiornami` aggiorna **il motore** (il plugin). Per
-> aggiornare **il tuo programma di studio** quando la materia cambia usa
-> `/rinnova`; per renderlo più denso, `/infittisci`.
+> Da non confondere: `/aggiornami` aggiorna **il motore**. Per aggiornare **il tuo
+> programma di studio** quando la materia cambia usa `/rinnova`; per renderlo più
+> denso, `/infittisci`.
 
-## Passo 1 — Controlla se c'è una versione nuova
-Esegui il controllo (non tocca niente, legge soltanto):
+## Passo 1 — Rinfresca il marketplace e controlla
+Esegui il controllo. **Rinfresca da solo il marketplace** (così la cache ha
+davvero l'ultima versione) e poi confronta la versione **in uso** con quella
+**disponibile**:
 ```
 python3 ${CLAUDE_PLUGIN_ROOT}/scripts/controlla_aggiornamenti.py
 ```
-Lo script confronta la versione installata con quella pubblicata sul marketplace
-e, se c'è un aggiornamento, stampa le **novità** dal changelog.
 
 ## Passo 2 — Racconta l'esito, in italiano semplice
-- **Già aggiornato** → rassicura: "Sei già all'ultima versione (X), non devi fare
-  niente." Fine.
+- **Già aggiornato** → "Sei già all'ultima versione (X), non c'è niente da fare." Fine.
 - **Aggiornamento disponibile** → di' qual è la versione nuova e riporta le novità
-  che lo script ha stampato, con parole tue e concrete ("da adesso c'è il comando
-  …", "…").
-- **Controllo non riuscito** (nessuna rete) → spiega che non sei riuscito a
-  verificare adesso e che può riprovare più tardi. Non bloccare nulla.
+  che lo script ha stampato, con parole tue e concrete.
+- **Controllo non riuscito** (nessuna rete) → spiega e invita a riprovare più tardi.
 
-## Passo 3 — Guidalo all'aggiornamento (il comando nativo lo esegue lui)
-L'installazione vera la fa Claude Code, non io. Se c'è una versione nuova,
-guidalo così:
+## Passo 3 — Installa l'aggiornamento (se disponibile)
+Se c'è una versione nuova, **installala tu** con il comando nativo:
+```
+claude plugin update road-to-mastery@road-to-mastery
+```
+- Se va a buon fine, avvisa che **l'aggiornamento si applica alla riapertura**:
+  "Ho scaricato la versione X: **chiudi e riapri la sessione** e sarà attiva."
+- Se quel comando non è disponibile nella sua build o dà errore, guidalo al menu:
+  "Scrivi `/plugin`, vai su **Installed** → **road-to-mastery** → **Update**."
 
-1. **Rinfresca il catalogo** del marketplace:
-   ```
-   /plugin marketplace update road-to-mastery
-   ```
-2. **Installa l'ultima versione.** La via che c'è sempre è il **menu**: scrivi
-   `/plugin`, apri la scheda **Installed**, scegli **road-to-mastery** e premi
-   **Update**.
-   In alternativa, se la tua build accetta gli argomenti, in una riga sola:
-   ```
-   /plugin update road-to-mastery@road-to-mastery
-   ```
-   (il nome è `plugin@marketplace`: qui si chiamano entrambi `road-to-mastery`).
-
-Poi basta riaprire la sessione: gli hook ricaricano lo stato e i comandi nuovi
-sono subito disponibili. I progressi di studio **non si toccano**: vivono nei tuoi
-file, non nel plugin.
+Non serve toccare nulla del percorso di studio: i progressi vivono nei file dello
+studente, non nel plugin, e restano intatti.
 
 ## Passo 4 — Chiudi
-Se ha aggiornato, invitalo a dare un `/help` per vedere eventuali comandi nuovi.
-Nessuna scrittura di stato è necessaria: questo comando non modifica il tuo
-percorso di studio.
+Dopo la riapertura, invitalo a dare un `/help` per vedere eventuali comandi nuovi.

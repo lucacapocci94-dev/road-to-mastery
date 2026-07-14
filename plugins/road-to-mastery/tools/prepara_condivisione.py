@@ -134,10 +134,32 @@ def _includi_motore(dest: Path):
     (dest / ".claude" / "settings.json").write_text(_settings(), encoding="utf-8")
 
 
+def _dentro(figlio: Path, genitore: Path) -> bool:
+    """True se `figlio` è uguale a o contenuto in `genitore`."""
+    try:
+        figlio.resolve().relative_to(genitore.resolve())
+        return True
+    except ValueError:
+        return False
+
+
 def prepara(src_root, dest, slugs):
     src_root, dest = Path(src_root), Path(dest)
     materie_src = src_root / "materie"
 
+    # SICUREZZA — la sorgente è SOLO LETTURA: non deve mai essere toccata.
+    # La destinazione deve essere una cartella separata, mai dentro la sorgente
+    # (né viceversa), altrimenti si rischia di scrivere sui file dello studente.
+    if _dentro(dest, src_root) or _dentro(src_root, dest):
+        raise SystemExit(
+            "✗ la cartella di destinazione non può coincidere con la tua cartella "
+            "di studio né starci dentro: scegline una separata (temporanea)."
+        )
+    if dest.exists() and any(dest.iterdir()):
+        raise SystemExit(f"✗ la destinazione esiste e non è vuota: {dest}")
+
+    if not materie_src.is_dir():
+        raise SystemExit(f"✗ nessuna cartella 'materie/' in {src_root}")
     mancanti = [s for s in slugs if not (materie_src / s).is_dir()]
     if mancanti:
         raise SystemExit(f"✗ materie non trovate: {', '.join(mancanti)}")

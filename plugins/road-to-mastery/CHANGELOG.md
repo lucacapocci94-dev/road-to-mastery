@@ -5,6 +5,15 @@ questa lista per dirti **cosa cambia** quando c'è una versione nuova da install
 
 Formato: una sezione `## X.Y.Z` per versione, con le novità in elenco.
 
+## 0.10.1
+- `/aggiornami`: ora **rinfresca davvero il marketplace** e confronta la versione
+  in uso con quella **disponibile nella cache** (non più con un branch di GitHub),
+  poi installa l'aggiornamento. Basta falsi "sei già aggiornato".
+- `/condividi`: corretto un bug grave — non tocca più la tua cartella. La sorgente
+  è in sola lettura, l'azzeramento avviene solo nella copia, e viene condivisa
+  esattamente la materia richiesta (non quella attiva). Rete di sicurezza che
+  rifiuta destinazioni dentro la tua cartella di studio.
+
 ## 0.10.0
 - Nuovo comando `/condividi`: impacchetta uno o più programmi in un `.zip` pulito
   da regalare a chi deve fare lo stesso corso — solo le materie scelte, progressi
