@@ -95,6 +95,12 @@ nome se disponibile in `CLAUDE.md` / `stato/progressi.md`.
 - `/diario` — la linea del tempo del tuo studio: cosa hai fatto, le tappe, dove
   sei ora. Si aggiorna da solo: tu non devi segnare niente
 
+### 🔄 Tieni aggiornato il tutor
+- `/aggiornami` — controlla se c'è una versione più recente del plugin e ti guida
+  a installarla, dicendoti cosa è cambiato
+  *Aggiorna il motore (i comandi), non il tuo programma: per quello ci sono
+  `/rinnova` e `/infittisci`*
+
 ---
 
 **Come è organizzato lo studio (mappa):**

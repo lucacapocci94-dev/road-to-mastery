@@ -40,6 +40,7 @@ sicurezza. Allo studente non si parla mai di commit/push/PR.
 | `/modalita` | passa tra micro (5-10 min) e standard (30-90 min) |
 | `/programma` | mostra il programma con lo stato delle lezioni |
 | `/avanzamento` | progressi per materia, ripassi dovuti, copertura del syllabus |
+| `/aggiornami` | controlla se c'è una versione più recente del plugin e ti guida all'aggiornamento (`/plugin update`), mostrando le novità dal changelog |
 | `/help` | guida completa a tutti i comandi |
 
 ## Skill — apprendimento profondo (i 6 prompt del tutor da zero, esplosi)
