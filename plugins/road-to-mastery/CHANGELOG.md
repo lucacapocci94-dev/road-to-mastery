@@ -5,6 +5,11 @@ questa lista per dirti **cosa cambia** quando c'è una versione nuova da install
 
 Formato: una sezione `## X.Y.Z` per versione, con le novità in elenco.
 
+## 0.10.0
+- Nuovo comando `/condividi`: impacchetta uno o più programmi in un `.zip` pulito
+  da regalare a chi deve fare lo stesso corso — solo le materie scelte, progressi
+  azzerati e nessun dato personale. Condivide il programma, non il motore.
+
 ## 0.9.1
 - `/aggiornami`: corrette le istruzioni di aggiornamento. Per installare l'ultima
   versione usa il menu `/plugin` → Installed → road-to-mastery → Update, oppure il

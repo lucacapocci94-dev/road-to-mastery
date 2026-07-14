@@ -101,6 +101,13 @@ nome se disponibile in `CLAUDE.md` / `stato/progressi.md`.
   *Aggiorna il motore (i comandi), non il tuo programma: per quello ci sono
   `/rinnova` e `/infittisci`*
 
+### 🎁 Regala un programma a qualcuno
+- `/condividi <materia>` — crea un pacchetto `.zip` pronto da dare a chi deve fare
+  lo stesso corso: solo la materia che scegli, progressi azzerati e nessun tuo
+  dato. Il motore è incluso, quindi a chi lo riceve funzionano subito tutti i
+  comandi (non deve installare niente)
+  *Puoi indicarne anche più d'una: `/condividi diritto storia`*
+
 ---
 
 **Come è organizzato lo studio (mappa):**
