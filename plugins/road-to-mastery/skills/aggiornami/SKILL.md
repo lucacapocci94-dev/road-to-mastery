@@ -32,13 +32,22 @@ e, se c'è un aggiornamento, stampa le **novità** dal changelog.
   verificare adesso e che può riprovare più tardi. Non bloccare nulla.
 
 ## Passo 3 — Guidalo all'aggiornamento (il comando nativo lo esegue lui)
-L'installazione vera la fa un **comando nativo di Claude Code**, che io non posso
-lanciare al posto tuo. Quindi, se c'è una versione nuova, digli di scrivere questi
-due comandi, in quest'ordine:
-```
-/plugin marketplace update road-to-mastery   ← rinfresca il catalogo
-/plugin update road-to-mastery               ← installa l'ultima versione
-```
+L'installazione vera la fa Claude Code, non io. Se c'è una versione nuova,
+guidalo così:
+
+1. **Rinfresca il catalogo** del marketplace:
+   ```
+   /plugin marketplace update road-to-mastery
+   ```
+2. **Installa l'ultima versione.** La via che c'è sempre è il **menu**: scrivi
+   `/plugin`, apri la scheda **Installed**, scegli **road-to-mastery** e premi
+   **Update**.
+   In alternativa, se la tua build accetta gli argomenti, in una riga sola:
+   ```
+   /plugin update road-to-mastery@road-to-mastery
+   ```
+   (il nome è `plugin@marketplace`: qui si chiamano entrambi `road-to-mastery`).
+
 Poi basta riaprire la sessione: gli hook ricaricano lo stato e i comandi nuovi
 sono subito disponibili. I progressi di studio **non si toccano**: vivono nei tuoi
 file, non nel plugin.

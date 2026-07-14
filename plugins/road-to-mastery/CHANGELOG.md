@@ -5,6 +5,11 @@ questa lista per dirti **cosa cambia** quando c'è una versione nuova da install
 
 Formato: una sezione `## X.Y.Z` per versione, con le novità in elenco.
 
+## 0.9.1
+- `/aggiornami`: corrette le istruzioni di aggiornamento. Per installare l'ultima
+  versione usa il menu `/plugin` → Installed → road-to-mastery → Update, oppure il
+  nome qualificato `road-to-mastery@road-to-mastery`.
+
 ## 0.9.0
 - Nuovo comando `/aggiornami`: controlla se sul marketplace c'è una versione più
   recente del plugin, ti mostra le novità e ti guida all'aggiornamento.
