@@ -1,7 +1,7 @@
 {
   "name": "road-to-mastery",
   "description": "Motore-tutor: trasforma una cartella in un tutor personale per qualsiasi esame. Programmi, micro-lezioni, interrogazioni e salvataggio automatico dei progressi.",
-  "version": "0.11.0",
+  "version": "0.12.0",
   "author": { "name": "Luca Capocci" },
   "license": "MIT",
   "keywords": ["tutor", "studio", "esami", "concorsi", "spaced-repetition"],

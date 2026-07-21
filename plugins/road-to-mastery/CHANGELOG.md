@@ -5,6 +5,9 @@ questa lista per dirti **cosa cambia** quando c'è una versione nuova da install
 
 Formato: una sezione `## X.Y.Z` per versione, con le novità in elenco.
 
+## 0.12.0 — 2026-07-21
+- Nuovo comando /configura: (ri)crea le configurazioni cloud (marketplace + plugin abilitato, hook di auto-merge, pin del branch) su una cartella già allestita, così i comandi del tutor ricompaiono da soli in ogni sessione web, desktop e mobile. È il Passo 5-bis di /organizza estratto in un comando dedicato e idempotente, per quando le configurazioni mancano o vanno riparate.
+
 ## 0.11.0 — 2026-07-21
 - Persistenza cloud: /organizza configura da se' ogni cartella (comandi nativi dal marketplace + auto-merge sul branch di consolidamento), cosi' ogni sessione web e mobile parte gia' pronta senza passaggi manuali. Auto-merge generalizzato con rilevamento del branch di default.
 
