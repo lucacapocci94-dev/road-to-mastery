@@ -25,6 +25,7 @@ Sicurezze:
 """
 import argparse
 import json
+import os
 import re
 import subprocess
 import sys
@@ -35,6 +36,11 @@ REPO = Path(__file__).resolve().parents[1]
 PLUGIN = REPO / "plugins" / "road-to-mastery"
 PLUGIN_JSON = PLUGIN / ".claude-plugin" / "plugin.json"
 CHANGELOG = PLUGIN / "CHANGELOG.md"
+RELEASE_PIN = REPO / ".release-branch"
+
+# Branch di rilascio: quello da cui il marketplace serve `/plugin update`.
+# NON è per forza "main": lo risolviamo a runtime (vedi release_branch()).
+# Questo valore è solo il fallback finale ed è aggiornato in main().
 MAIN = "main"
 
 
@@ -65,6 +71,39 @@ def bump_version(version: str, part: str) -> str:
     else:
         raise SystemExit(f"✗ parte di versione sconosciuta: {part}")
     return f"{major}.{minor}.{patch}"
+
+
+def release_branch() -> str:
+    """Il branch di rilascio (default del repo), da cui `/plugin update` pesca.
+
+    In ordine di priorità — così funziona anche offline e in repo con default
+    non standard:
+      1. file  .release-branch    (una riga: il nome del branch)  ← pin esplicito
+      2. env   RTM_RELEASE_BRANCH
+      3. git symbolic-ref refs/remotes/origin/HEAD  (se impostato)
+      4. git remote show origin → "HEAD branch"      (richiede rete)
+      5. fallback: main
+    """
+    if RELEASE_PIN.exists():
+        for riga in RELEASE_PIN.read_text().splitlines():
+            riga = riga.strip()
+            if riga and not riga.startswith("#"):
+                return riga
+    env = os.environ.get("RTM_RELEASE_BRANCH")
+    if env and env.strip():
+        return env.strip()
+    r = run("git", "symbolic-ref", "--short", "refs/remotes/origin/HEAD", check=False)
+    if r.returncode == 0 and r.stdout.strip():
+        return r.stdout.strip().split("origin/", 1)[-1]
+    r = run("git", "remote", "show", "origin", check=False)
+    if r.returncode == 0:
+        for riga in r.stdout.splitlines():
+            riga = riga.strip()
+            if riga.startswith("HEAD branch:"):
+                b = riga.split(":", 1)[1].strip()
+                if b and b != "(unknown)":
+                    return b
+    return "main"
 
 
 def leggi_versione() -> str:
@@ -134,6 +173,11 @@ def main(argv=None):
 
     if run("git", "rev-parse", "--show-toplevel", check=False).returncode != 0:
         raise SystemExit("✗ non è un repo git.")
+
+    # Risolvi il branch di rilascio reale (non necessariamente "main") e usalo
+    # ovunque tramite la globale MAIN.
+    global MAIN
+    MAIN = release_branch()
 
     branch = branch_corrente()
     attuale = leggi_versione()
