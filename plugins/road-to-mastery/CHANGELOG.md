@@ -5,6 +5,9 @@ questa lista per dirti **cosa cambia** quando c'è una versione nuova da install
 
 Formato: una sezione `## X.Y.Z` per versione, con le novità in elenco.
 
+## 0.11.0 — 2026-07-21
+- Persistenza cloud: /organizza configura da se' ogni cartella (comandi nativi dal marketplace + auto-merge sul branch di consolidamento), cosi' ogni sessione web e mobile parte gia' pronta senza passaggi manuali. Auto-merge generalizzato con rilevamento del branch di default.
+
 ## 0.10.1
 - `/aggiornami`: ora **rinfresca davvero il marketplace** e confronta la versione
   in uso con quella **disponibile nella cache** (non più con un branch di GitHub),
