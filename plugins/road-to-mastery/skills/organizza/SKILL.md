@@ -125,6 +125,10 @@ riparte pulita ogni volta: quello che rende la cartella auto-configurante deve
 vivere **committato nel repo**, non nella macchina. Esegui **sempre** questo passo
 (prima configurazione *o* nuova materia); è idempotente, non fare domande tecniche.
 
+> Questo stesso lavoro è disponibile anche come comando a sé, `/configura`: usalo
+> se in futuro le configurazioni cloud mancano o vanno riparate su una cartella
+> già allestita. Tieni i due allineati.
+
 1. **Config nativa dei comandi.** Assicura `.claude/settings.json` nella radice.
    - Se non esiste: copialo da `${CLAUDE_PLUGIN_ROOT}/templates/settings.json.template`.
    - Se esiste: **fondi** le chiavi senza cancellare nulla di suo — deve contenere
