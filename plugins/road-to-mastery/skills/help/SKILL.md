@@ -30,6 +30,11 @@ nome se disponibile in `CLAUDE.md` / `stato/progressi.md`.
   costruisco un percorso a ritroso, un compito al giorno con criterio di riuscita
   e cosa NON fare
   *Usalo quando hai una meta precisa entro una data, non solo "studiare X"*
+- `/configura` — reimposta le configurazioni che fanno ricomparire da soli i
+  comandi del tutor in ogni sessione nuova (web, desktop e telefono) e salvano i
+  progressi in automatico
+  *Serve solo se il programma c'è già ma i comandi non compaiono più: normalmente
+  ci pensa `/organizza`*
 
 ### 📚 Consulta il programma
 - `/programma` — vedi tutto il programma con moduli e lezioni

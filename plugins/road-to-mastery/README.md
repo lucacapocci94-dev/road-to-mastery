@@ -29,6 +29,7 @@ sicurezza. Allo studente non si parla mai di commit/push/PR.
 | Skill | Cosa fa |
 |---|---|
 | `/organizza` | bootstrap della cartella-studente: struttura, programmi con controllo di copertura, CLAUDE.md, diario, **persistenza cloud** (config nativa dei comandi + hook di auto-merge sul branch di consolidamento, così ogni sessione web si riconfigura da sola) |
+| `/configura` | (ri)crea **solo** la persistenza cloud su una cartella già allestita: `.claude/settings.json` (marketplace + plugin abilitato), hook di auto-merge e pin del branch di consolidamento. È il Passo 5-bis di `/organizza` estratto in un comando dedicato, idempotente; usalo quando le configurazioni mancano o vanno riparate |
 | `/tutor` | lezione interattiva con ricerca web e teach-back |
 | `/testa` | verifica delle conoscenze pregresse su un modulo |
 | `/interrogazione` | domande sul già studiato, priorità ai punti deboli |
