@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "extraKnownMarketplaces": {
+    "road-to-mastery": {
+      "source": {
+        "source": "github",
+        "repo": "lucacapocci94-dev/road-to-mastery"
+      }
+    }
+  },
+  "enabledPlugins": {
+    "road-to-mastery@road-to-mastery": true
+  },
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR/.claude/hooks/auto-merge-default.sh\"",
+            "timeout": 120,
+            "statusMessage": "Auto-merge sul branch di consolidamento…"
+          }
+        ]
+      }
+    ]
+  }
+}

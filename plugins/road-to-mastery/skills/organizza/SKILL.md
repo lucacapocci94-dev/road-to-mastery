@@ -118,6 +118,43 @@ in quella cartella, l'ambiente è già un tutor configurato per lui.
 
 ---
 
+## Passo 5-bis — Persistenza in cloud (silenzioso, sempre)
+
+Serve perché le sessioni cloud/mobile partono da una macchina **effimera** che
+riparte pulita ogni volta: quello che rende la cartella auto-configurante deve
+vivere **committato nel repo**, non nella macchina. Esegui **sempre** questo passo
+(prima configurazione *o* nuova materia); è idempotente, non fare domande tecniche.
+
+1. **Config nativa dei comandi.** Assicura `.claude/settings.json` nella radice.
+   - Se non esiste: copialo da `${CLAUDE_PLUGIN_ROOT}/templates/settings.json.template`.
+   - Se esiste: **fondi** le chiavi senza cancellare nulla di suo — deve contenere
+     `extraKnownMarketplaces.road-to-mastery` (github `lucacapocci94-dev/road-to-mastery`),
+     `enabledPlugins["road-to-mastery@road-to-mastery"] = true` e lo hook `Stop`
+     verso `auto-merge-default.sh` (vedi punto 2).
+
+   È così che i comandi del tutor compaiono da soli a ogni avvio di sessione web:
+   Claude Code installa e abilita il plugin dal marketplace dichiarato qui, in
+   modo nativo. **Non** creare hook che invocano la CLI `claude` per installare
+   (in cloud la CLI non è nel PATH: sarebbe un no-op). Richiede rete verso GitHub
+   attiva nell'ambiente.
+
+2. **Auto-merge sul branch di consolidamento.** Copia
+   `${CLAUDE_PLUGIN_ROOT}/templates/auto-merge-default.sh.template` in
+   `.claude/hooks/auto-merge-default.sh` e rendilo eseguibile (`chmod +x`). A fine
+   di ogni turno consolida il branch di lavoro in quello di consolidamento senza
+   toccare il working tree e senza perdere lezioni.
+
+3. **Pin del branch di consolidamento.** Rileva il branch dove far confluire tutto
+   con `git remote show origin` (riga `HEAD branch`); se fallisce, usa il branch
+   corrente. Scrivi quel nome, da solo su una riga, in `.claude/merge-target`.
+   Serve perché in questi ambienti `origin/HEAD` spesso non è impostato: pinnarlo
+   esplicitamente rende l'auto-merge stabile tra una sessione e l'altra. (Lo studente
+   può cambiarlo modificando quella singola riga.)
+
+Non parlare allo studente di git, branch, hook o marketplace: è tutto lavoro tuo.
+
+---
+
 ## Passo 6 — Inizializza `stato/progressi.md`
 
 Registra: materie presenti, **materia attiva** (= quella appena creata),

@@ -1,0 +1,160 @@
+#!/bin/bash
+# ---------------------------------------------------------------------------
+# auto-merge-default.sh — Stop hook (steso da /organizza nel repo di studio)
+#
+# A fine di ogni turno, mergia automaticamente il branch di lavoro corrente nel
+# branch "di consolidamento" del repo, in modo robusto e "a prova di perdita":
+#   - non tocca MAI il working tree / il branch su cui stai lavorando
+#     (usa un worktree temporaneo detached);
+#   - non mergia stati parziali (se ci sono modifiche non committate, si ferma
+#     e lascia che sia l'hook di checkpoint del plugin a fare il commit);
+#   - risolve i conflitti preferendo il branch di lavoro (-X theirs), così le
+#     lezioni fatte non vengono mai perse;
+#   - se il merge non è automatizzabile, NON forza: avvisa e passa la palla.
+#
+# Il branch di consolidamento (dove si accumula tutto) è risolto in quest'ordine
+# — così lo stesso script funziona in qualsiasi repo senza hardcode:
+#   1. file  .claude/merge-target      (una riga: il nome del branch)  ← pin esplicito
+#   2. env   RTM_MERGE_TARGET
+#   3. git symbolic-ref refs/remotes/origin/HEAD   (se impostato)
+#   4. git remote show origin → "HEAD branch"       (richiede rete)
+#   5. fallback: main
+#
+# Uscite: 0 = ok (merge fatto o niente da fare); 2 = serve intervento manuale.
+# ---------------------------------------------------------------------------
+
+set -uo pipefail
+
+# --- input dello hook (JSON su stdin) -------------------------------------
+input="$(cat 2>/dev/null || true)"
+
+# Anti-ricorsione: se siamo già dentro un giro di Stop hook, non rientrare.
+if command -v jq >/dev/null 2>&1; then
+  if [[ "$(printf '%s' "$input" | jq -r '.stop_hook_active // false' 2>/dev/null)" == "true" ]]; then
+    exit 0
+  fi
+fi
+
+# Deve essere un repo git con un remote, altrimenti niente da fare.
+git rev-parse --git-dir >/dev/null 2>&1 || exit 0
+[[ -n "$(git remote 2>/dev/null)" ]] || exit 0
+
+CURRENT_BRANCH="$(git branch --show-current 2>/dev/null)"
+[[ -n "$CURRENT_BRANCH" ]] || exit 0
+
+# --- risoluzione del branch di consolidamento -----------------------------
+resolve_target() {
+  local t=""
+  # 1) pin esplicito committato nel repo (vince su tutto)
+  local pin="${CLAUDE_PROJECT_DIR:-$(git rev-parse --show-toplevel 2>/dev/null)}/.claude/merge-target"
+  if [[ -f "$pin" ]]; then
+    t="$(grep -vE '^\s*(#|$)' "$pin" 2>/dev/null | head -n1 | tr -d '[:space:]')"
+    [[ -n "$t" ]] && { printf '%s' "$t"; return 0; }
+  fi
+  # 2) override da ambiente
+  if [[ -n "${RTM_MERGE_TARGET:-}" ]]; then
+    printf '%s' "$RTM_MERGE_TARGET"; return 0
+  fi
+  # 3) origin/HEAD, se è stato impostato (git remote set-head origin -a)
+  t="$(git symbolic-ref --short refs/remotes/origin/HEAD 2>/dev/null | sed 's#^origin/##')"
+  [[ -n "$t" ]] && { printf '%s' "$t"; return 0; }
+  # 4) chiedi al remote (serve rete)
+  t="$(git remote show origin 2>/dev/null | sed -n 's/.*HEAD branch: //p' | head -n1 | tr -d '[:space:]')"
+  [[ -n "$t" && "$t" != "(unknown)" ]] && { printf '%s' "$t"; return 0; }
+  # 5) fallback
+  printf 'main'
+}
+
+DEFAULT_BRANCH="$(resolve_target)"
+[[ -n "$DEFAULT_BRANCH" ]] || exit 0
+
+# Se siamo già sul branch di consolidamento, non c'è nulla da mergiare.
+[[ "$CURRENT_BRANCH" == "$DEFAULT_BRANCH" ]] && exit 0
+
+# Non mergiare stati parziali: se il working tree è sporco o ci sono file
+# untracked, lascia che sia il checkpoint del plugin a fare prima il commit.
+if ! git diff --quiet || ! git diff --cached --quiet; then
+  exit 0
+fi
+if [[ -n "$(git ls-files --others --exclude-standard 2>/dev/null)" ]]; then
+  exit 0
+fi
+
+# Identità per l'eventuale commit di merge (evita "empty ident" nel worktree).
+export GIT_AUTHOR_NAME="Claude"
+export GIT_AUTHOR_EMAIL="noreply@anthropic.com"
+export GIT_COMMITTER_NAME="Claude"
+export GIT_COMMITTER_EMAIL="noreply@anthropic.com"
+
+# Retry con backoff esponenziale (2s,4s,8s,16s) solo sulle operazioni di rete.
+retry() {
+  local n=0 max=4 delay=2
+  until "$@"; do
+    n=$((n + 1))
+    if [[ $n -ge $max ]]; then
+      return 1
+    fi
+    sleep "$delay"
+    delay=$((delay * 2))
+  done
+  return 0
+}
+
+# 1) Assicura che il remote abbia gli ultimi commit del branch di lavoro.
+if ! retry git push -u origin "$CURRENT_BRANCH" >/dev/null 2>&1; then
+  echo "auto-merge: impossibile pushare '$CURRENT_BRANCH' (rete?). Nessun merge eseguito." >&2
+  exit 2
+fi
+
+# 2) Aggiorna i riferimenti remoti di entrambi i branch.
+if ! retry git fetch origin "$DEFAULT_BRANCH" "$CURRENT_BRANCH" >/dev/null 2>&1; then
+  # Il branch di lavoro c'è di sicuro; il default potrebbe non esistere ancora.
+  retry git fetch origin "$CURRENT_BRANCH" >/dev/null 2>&1 || {
+    echo "auto-merge: fetch non riuscito (rete?)." >&2
+    exit 2
+  }
+fi
+
+# Se il branch di consolidamento non esiste ancora sul remote, crealo dal lavoro.
+if ! git rev-parse --verify "origin/$DEFAULT_BRANCH" >/dev/null 2>&1; then
+  if retry git push origin "origin/$CURRENT_BRANCH:refs/heads/$DEFAULT_BRANCH" >/dev/null 2>&1; then
+    echo "{\"systemMessage\": \"🔀 Auto-merge: creato il branch di consolidamento '$DEFAULT_BRANCH' da '$CURRENT_BRANCH'.\"}"
+    exit 0
+  fi
+  echo "auto-merge: impossibile creare '$DEFAULT_BRANCH' sul remote." >&2
+  exit 2
+fi
+
+# 3) Se non ci sono commit nuovi rispetto al default, non c'è nulla da fare.
+ahead="$(git rev-list --count "origin/$DEFAULT_BRANCH..origin/$CURRENT_BRANCH" 2>/dev/null || echo 0)"
+[[ "$ahead" -gt 0 ]] || exit 0
+
+# 4) Merge in un worktree temporaneo DETACHED: non tocca il tuo working tree.
+WT="$(mktemp -d 2>/dev/null)/am"
+cleanup() {
+  git worktree remove --force "$WT" >/dev/null 2>&1 || true
+  git worktree prune >/dev/null 2>&1 || true
+  rmdir "$(dirname "$WT")" >/dev/null 2>&1 || true
+}
+trap cleanup EXIT
+
+if ! git worktree add --detach "$WT" "origin/$DEFAULT_BRANCH" >/dev/null 2>&1; then
+  echo "auto-merge: impossibile creare il worktree temporaneo." >&2
+  exit 2
+fi
+
+# Merge preferendo il branch di lavoro sui conflitti (-X theirs) → non perde lezioni.
+if ! git -C "$WT" merge --no-edit -X theirs "origin/$CURRENT_BRANCH" >/dev/null 2>&1; then
+  git -C "$WT" merge --abort >/dev/null 2>&1 || true
+  echo "auto-merge: conflitto non risolvibile automaticamente tra '$CURRENT_BRANCH' e '$DEFAULT_BRANCH'. Risolvo a mano, nessun dato perso." >&2
+  exit 2
+fi
+
+# 5) Pubblica il risultato sul branch di consolidamento (push non forzato).
+if ! retry git -C "$WT" push origin "HEAD:refs/heads/$DEFAULT_BRANCH" >/dev/null 2>&1; then
+  echo "auto-merge: merge riuscito ma push su '$DEFAULT_BRANCH' fallito (il remote è avanzato?). Riprovo al prossimo turno." >&2
+  exit 2
+fi
+
+echo "{\"systemMessage\": \"🔀 Auto-merge: '$CURRENT_BRANCH' ($ahead commit) integrato in '$DEFAULT_BRANCH'.\"}"
+exit 0

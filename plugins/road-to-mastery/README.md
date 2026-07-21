@@ -28,7 +28,7 @@ sicurezza. Allo studente non si parla mai di commit/push/PR.
 
 | Skill | Cosa fa |
 |---|---|
-| `/organizza` | bootstrap della cartella-studente: struttura, programmi con controllo di copertura, CLAUDE.md, diario |
+| `/organizza` | bootstrap della cartella-studente: struttura, programmi con controllo di copertura, CLAUDE.md, diario, **persistenza cloud** (config nativa dei comandi + hook di auto-merge sul branch di consolidamento, così ogni sessione web si riconfigura da sola) |
 | `/tutor` | lezione interattiva con ricerca web e teach-back |
 | `/testa` | verifica delle conoscenze pregresse su un modulo |
 | `/interrogazione` | domande sul già studiato, priorità ai punti deboli |
