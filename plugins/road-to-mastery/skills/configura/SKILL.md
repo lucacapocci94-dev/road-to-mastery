@@ -46,18 +46,37 @@ Assicura `.claude/settings.json` nella radice della cartella-studente.
   - `extraKnownMarketplaces.road-to-mastery` → source `github`, repo
     `lucacapocci94-dev/road-to-mastery`;
   - `enabledPlugins["road-to-mastery@road-to-mastery"] = true`;
-  - lo hook `Stop` che invoca `.claude/hooks/auto-merge-default.sh` (vedi Passo 2).
+  - lo hook `SessionStart` che invoca `.claude/hooks/install-plugin.sh` (vedi Passo 2);
+  - lo hook `Stop` che invoca `.claude/hooks/auto-merge-default.sh` (vedi Passo 3).
 
-È così che i comandi del tutor compaiono da soli a ogni avvio di sessione web,
-desktop e mobile: Claude Code installa e abilita il plugin dal marketplace
-dichiarato qui, in modo nativo.
-
-**Non** creare hook che invocano la CLI `claude` per installare: in cloud la CLI
-non è nel PATH e sarebbe un no-op. Serve rete verso GitHub attiva nell'ambiente.
+Dichiarare qui marketplace e plugin è la via nativa perché i comandi del tutor
+compaiano da soli su desktop e mobile. **Ma sul web (claude.ai) questa sola
+dichiarazione non fa scattare l'installazione automatica**: il container parte
+senza il plugin, quindi i comandi non esistono. Per questo serve anche lo hook
+`install-plugin.sh` del Passo 2, che installa il plugin via CLI come rete di
+sicurezza. In tutti i casi serve rete verso GitHub attiva nell'ambiente.
 
 ---
 
-## Passo 2 — Hook di auto-merge sul branch di consolidamento
+## Passo 2 — Hook di auto-installazione del plugin (rete di sicurezza per il web)
+
+Copia `${CLAUDE_PLUGIN_ROOT}/templates/install-plugin.sh.template` in
+`.claude/hooks/install-plugin.sh` e rendilo eseguibile (`chmod +x`).
+
+È lo hook `SessionStart` agganciato nel `settings.json` del Passo 1. All'avvio
+controlla se il plugin è già installato e, se manca, lo installa via CLI
+(`claude plugin marketplace add` + `claude plugin install --scope user`). È
+**idempotente** (se c'è già, esce subito) e **non blocca mai** l'avvio: se la CLI
+manca o non c'è rete, esce in silenzio e riprova al giro dopo.
+
+Serve perché sul web la sola dichiarazione in `settings.json` non installa il
+plugin da sola. Nota onesta: l'installazione avviene mentre i plugin sono già
+caricati, quindi i comandi compaiono **dall'avvio successivo** (o dopo un
+`/plugin`). Il valore è la garanzia: da lì in poi il plugin c'è sempre.
+
+---
+
+## Passo 3 — Hook di auto-merge sul branch di consolidamento
 
 Copia `${CLAUDE_PLUGIN_ROOT}/templates/auto-merge-default.sh.template` in
 `.claude/hooks/auto-merge-default.sh` e rendilo eseguibile (`chmod +x`).
@@ -67,7 +86,7 @@ senza toccare il working tree e senza perdere lezioni.
 
 ---
 
-## Passo 3 — Pin del branch di consolidamento
+## Passo 4 — Pin del branch di consolidamento
 
 Rileva il branch dove far confluire tutto con `git remote show origin` (riga
 `HEAD branch`); se fallisce, usa il branch corrente. Scrivi quel nome, da solo su
@@ -82,10 +101,10 @@ può cambiarlo modificando quella singola riga.)
 
 ---
 
-## Passo 4 — Verifica e riepilogo
+## Passo 5 — Verifica e riepilogo
 
-Controlla che i tre pezzi siano a posto e riferisci in italiano semplice, senza
-gergo tecnico. Un riepilogo del tipo:
+Controlla che i quattro pezzi siano a posto e riferisci in italiano semplice,
+senza gergo tecnico. Un riepilogo del tipo:
 
 > "Fatto: ho reimpostato le configurazioni. Da ora, ogni volta che apri lo studio
 > in una sessione nuova — dal web, dall'app desktop o dal telefono — i comandi del

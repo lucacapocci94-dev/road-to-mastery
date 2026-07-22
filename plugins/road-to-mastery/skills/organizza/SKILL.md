@@ -133,22 +133,31 @@ vivere **committato nel repo**, non nella macchina. Esegui **sempre** questo pas
    - Se non esiste: copialo da `${CLAUDE_PLUGIN_ROOT}/templates/settings.json.template`.
    - Se esiste: **fondi** le chiavi senza cancellare nulla di suo — deve contenere
      `extraKnownMarketplaces.road-to-mastery` (github `lucacapocci94-dev/road-to-mastery`),
-     `enabledPlugins["road-to-mastery@road-to-mastery"] = true` e lo hook `Stop`
-     verso `auto-merge-default.sh` (vedi punto 2).
+     `enabledPlugins["road-to-mastery@road-to-mastery"] = true`, lo hook
+     `SessionStart` verso `install-plugin.sh` (vedi punto 2) e lo hook `Stop`
+     verso `auto-merge-default.sh` (vedi punto 3).
 
-   È così che i comandi del tutor compaiono da soli a ogni avvio di sessione web:
-   Claude Code installa e abilita il plugin dal marketplace dichiarato qui, in
-   modo nativo. **Non** creare hook che invocano la CLI `claude` per installare
-   (in cloud la CLI non è nel PATH: sarebbe un no-op). Richiede rete verso GitHub
-   attiva nell'ambiente.
+   Dichiarare marketplace e plugin qui è la via nativa su desktop e mobile. **Sul
+   web (claude.ai), però, questa dichiarazione da sola non installa il plugin**:
+   il container parte senza, e i comandi non esistono. Per questo al punto 2 si
+   aggiunge lo hook `install-plugin.sh`, che installa via CLI come rete di
+   sicurezza. In tutti i casi serve rete verso GitHub attiva nell'ambiente.
 
-2. **Auto-merge sul branch di consolidamento.** Copia
+2. **Auto-installazione del plugin (rete di sicurezza web).** Copia
+   `${CLAUDE_PLUGIN_ROOT}/templates/install-plugin.sh.template` in
+   `.claude/hooks/install-plugin.sh` e rendilo eseguibile (`chmod +x`). È lo hook
+   `SessionStart` del punto 1: all'avvio installa il plugin via CLI se manca
+   (`claude plugin marketplace add` + `claude plugin install --scope user`). È
+   idempotente e non blocca mai l'avvio — se la CLI manca o non c'è rete, esce in
+   silenzio e riprova al giro dopo. (I comandi compaiono dall'avvio successivo.)
+
+3. **Auto-merge sul branch di consolidamento.** Copia
    `${CLAUDE_PLUGIN_ROOT}/templates/auto-merge-default.sh.template` in
    `.claude/hooks/auto-merge-default.sh` e rendilo eseguibile (`chmod +x`). A fine
    di ogni turno consolida il branch di lavoro in quello di consolidamento senza
    toccare il working tree e senza perdere lezioni.
 
-3. **Pin del branch di consolidamento.** Rileva il branch dove far confluire tutto
+4. **Pin del branch di consolidamento.** Rileva il branch dove far confluire tutto
    con `git remote show origin` (riga `HEAD branch`); se fallisce, usa il branch
    corrente. Scrivi quel nome, da solo su una riga, in `.claude/merge-target`.
    Serve perché in questi ambienti `origin/HEAD` spesso non è impostato: pinnarlo

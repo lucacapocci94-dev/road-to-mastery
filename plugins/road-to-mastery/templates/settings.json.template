@@ -12,6 +12,18 @@
     "road-to-mastery@road-to-mastery": true
   },
   "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR/.claude/hooks/install-plugin.sh\"",
+            "timeout": 120,
+            "statusMessage": "Verifica installazione del tutor…"
+          }
+        ]
+      }
+    ],
     "Stop": [
       {
         "hooks": [
