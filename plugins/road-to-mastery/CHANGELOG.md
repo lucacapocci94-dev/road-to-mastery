@@ -5,6 +5,9 @@ questa lista per dirti **cosa cambia** quando c'è una versione nuova da install
 
 Formato: una sezione `## X.Y.Z` per versione, con le novità in elenco.
 
+## 0.13.0 — 2026-07-22
+- Auto-installazione del plugin sul web via SessionStart hook (install-plugin.sh); /configura e /organizza aggiornati
+
 ## 0.12.0 — 2026-07-21
 - Nuovo comando /configura: (ri)crea le configurazioni cloud (marketplace + plugin abilitato, hook di auto-merge, pin del branch) su una cartella già allestita, così i comandi del tutor ricompaiono da soli in ogni sessione web, desktop e mobile. È il Passo 5-bis di /organizza estratto in un comando dedicato e idempotente, per quando le configurazioni mancano o vanno riparate.
 
