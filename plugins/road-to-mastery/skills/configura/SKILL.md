@@ -46,37 +46,31 @@ Assicura `.claude/settings.json` nella radice della cartella-studente.
   - `extraKnownMarketplaces.road-to-mastery` → source `github`, repo
     `lucacapocci94-dev/road-to-mastery`;
   - `enabledPlugins["road-to-mastery@road-to-mastery"] = true`;
-  - lo hook `SessionStart` che invoca `.claude/hooks/install-plugin.sh` (vedi Passo 2);
-  - lo hook `Stop` che invoca `.claude/hooks/auto-merge-default.sh` (vedi Passo 3).
+  - lo hook `Stop` che invoca `.claude/hooks/auto-merge-default.sh` (vedi Passo 2).
 
-Dichiarare qui marketplace e plugin è la via nativa perché i comandi del tutor
-compaiano da soli su desktop e mobile. **Ma sul web (claude.ai) questa sola
-dichiarazione non fa scattare l'installazione automatica**: il container parte
-senza il plugin, quindi i comandi non esistono. Per questo serve anche lo hook
-`install-plugin.sh` del Passo 2, che installa il plugin via CLI come rete di
-sicurezza. In tutti i casi serve rete verso GitHub attiva nell'ambiente.
+È così che i comandi del tutor compaiono da soli a ogni avvio di sessione — web,
+desktop e mobile: **all'avvio Claude Code legge questa dichiarazione, scarica il
+marketplace da GitHub e installa il plugin**, in modo nativo.
 
----
+Perché questo funzioni servono **due** condizioni, entrambe importanti:
 
-## Passo 2 — Hook di auto-installazione del plugin (rete di sicurezza per il web)
+- la dichiarazione deve stare nel `settings.json` **del repo** (committato), non
+  nelle impostazioni utente della tua macchina: quelle non arrivano nelle sessioni
+  cloud;
+- l'ambiente deve avere **rete verso GitHub** attiva. Sul web la rete è governata
+  dalla *politica di rete* dell'ambiente: se è troppo restrittiva, il download del
+  marketplace fallisce in silenzio e i comandi non compaiono. Se dopo `/configura`
+  i comandi mancano ancora in una sessione web nuova, il sospetto numero uno è
+  proprio la politica di rete dell'ambiente (va impostata per raggiungere GitHub).
 
-Copia `${CLAUDE_PLUGIN_ROOT}/templates/install-plugin.sh.template` in
-`.claude/hooks/install-plugin.sh` e rendilo eseguibile (`chmod +x`).
-
-È lo hook `SessionStart` agganciato nel `settings.json` del Passo 1. All'avvio
-controlla se il plugin è già installato e, se manca, lo installa via CLI
-(`claude plugin marketplace add` + `claude plugin install --scope user`). È
-**idempotente** (se c'è già, esce subito) e **non blocca mai** l'avvio: se la CLI
-manca o non c'è rete, esce in silenzio e riprova al giro dopo.
-
-Serve perché sul web la sola dichiarazione in `settings.json` non installa il
-plugin da sola. Nota onesta: l'installazione avviene mentre i plugin sono già
-caricati, quindi i comandi compaiono **dall'avvio successivo** (o dopo un
-`/plugin`). Il valore è la garanzia: da lì in poi il plugin c'è sempre.
+> **Non** creare hook che installano il plugin via CLI: sul web un plugin
+> installato durante la sessione non diventa disponibile in quella sessione e non
+> persiste in quella dopo (il container è effimero). La via giusta è la
+> dichiarazione qui sopra + rete verso GitHub.
 
 ---
 
-## Passo 3 — Hook di auto-merge sul branch di consolidamento
+## Passo 2 — Hook di auto-merge sul branch di consolidamento
 
 Copia `${CLAUDE_PLUGIN_ROOT}/templates/auto-merge-default.sh.template` in
 `.claude/hooks/auto-merge-default.sh` e rendilo eseguibile (`chmod +x`).
@@ -86,7 +80,7 @@ senza toccare il working tree e senza perdere lezioni.
 
 ---
 
-## Passo 4 — Pin del branch di consolidamento
+## Passo 3 — Pin del branch di consolidamento
 
 Rileva il branch dove far confluire tutto con `git remote show origin` (riga
 `HEAD branch`); se fallisce, usa il branch corrente. Scrivi quel nome, da solo su
@@ -101,19 +95,21 @@ può cambiarlo modificando quella singola riga.)
 
 ---
 
-## Passo 5 — Verifica e riepilogo
+## Passo 4 — Verifica e riepilogo
 
-Controlla che i quattro pezzi siano a posto e riferisci in italiano semplice,
-senza gergo tecnico. Un riepilogo del tipo:
+Controlla che i tre pezzi siano a posto e riferisci in italiano semplice, senza
+gergo tecnico. Un riepilogo del tipo:
 
 > "Fatto: ho reimpostato le configurazioni. Da ora, ogni volta che apri lo studio
 > in una sessione nuova — dal web, dall'app desktop o dal telefono — i comandi del
 > tutor ci saranno già e i tuoi progressi si salveranno da soli."
 
-Se qualcosa non è stato possibile (per esempio non c'è rete verso GitHub, quindi
-il plugin verrà installato al primo avvio con rete), dillo con parole semplici e
-rassicura: i file di configurazione sono comunque scritti e committati, e faranno
-effetto appena l'ambiente avrà rete.
+I file di configurazione sono comunque scritti e committati, e faranno effetto a
+ogni avvio in cui l'ambiente riesce a raggiungere GitHub. Se in una sessione web
+nuova i comandi non compaiono ancora, quasi sempre è la **politica di rete**
+dell'ambiente a bloccare GitHub: dillo con parole semplici e spiega che va
+impostata perché l'ambiente possa raggiungere GitHub (è un'impostazione
+dell'ambiente cloud, non della cartella).
 
 ---
 

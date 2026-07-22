@@ -5,6 +5,9 @@ questa lista per dirti **cosa cambia** quando c'è una versione nuova da install
 
 Formato: una sezione `## X.Y.Z` per versione, con le novità in elenco.
 
+## 0.13.1 — 2026-07-22
+- Rimosso l'hook install-plugin (inefficace sul web); /configura e /organizza spiegano la via corretta: dichiarazione nel repo + rete GitHub via politica di rete dell'ambiente
+
 ## 0.13.0 — 2026-07-22
 - Auto-installazione del plugin sul web via SessionStart hook (install-plugin.sh); /configura e /organizza aggiornati
 
