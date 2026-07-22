@@ -1,0 +1,62 @@
+#!/bin/bash
+# ---------------------------------------------------------------------------
+# install-plugin.sh — SessionStart hook (steso da /organizza e /configura nel
+# repo di studio).
+#
+# Perché esiste: nelle sessioni web di Claude Code (claude.ai) il container è
+# effimero e riparte pulito ogni volta. La sola dichiarazione del marketplace +
+# plugin in .claude/settings.json NON basta a far installare il plugin da solo
+# in quell'ambiente: la sessione parte senza il plugin, quindi i comandi del
+# tutor (/tutor, /organizza, /configura…) non esistono. Questo hook chiude il
+# buco installando il plugin via CLI, che sul web è disponibile e nel PATH.
+#
+# Garanzie di progetto:
+#   - IDEMPOTENTE: se il plugin è già registrato, esce subito senza rifare nulla.
+#   - NON BLOCCA MAI l'avvio: se la CLI manca o la rete è assente, esce 0 in
+#     silenzio (best-effort). Nessun errore deve impedire la sessione.
+#   - Rete di sicurezza per il web; in locale i plugin persistono da soli, quindi
+#     lì l'uscita rapida idempotente lo rende un no-op.
+#
+# Limite onesto: l'installazione avviene all'avvio, quando i plugin sono già
+# stati caricati; i comandi diventano quindi disponibili dall'avvio SUCCESSIVO
+# nello stesso ambiente (o dopo un /plugin). Il valore è la garanzia: da qui in
+# poi il plugin c'è sempre, senza interventi manuali.
+# ---------------------------------------------------------------------------
+set -u
+
+PLUGIN="road-to-mastery@road-to-mastery"
+MARKET_REPO="lucacapocci94-dev/road-to-mastery"
+
+# Directory di configurazione di Claude (dove vive il registro dei plugin).
+CFG="${CLAUDE_CONFIG_DIR:-$HOME/.claude}"
+REGISTRY="$CFG/plugins/installed_plugins.json"
+
+# Serve il CLI `claude`; se manca (es. ambienti senza CLI nel PATH), no-op.
+command -v claude >/dev/null 2>&1 || exit 0
+
+# Idempotenza: se il plugin è già nel registro, non c'è nulla da fare.
+if [ -f "$REGISTRY" ] && grep -q "$PLUGIN" "$REGISTRY" 2>/dev/null; then
+  exit 0
+fi
+
+# Best-effort con backoff: le sessioni web possono avere rete lenta o assente.
+# Non fallire mai: ogni tentativo è "|| true", e comunque usciamo 0 alla fine.
+retry() {
+  local delay=2 attempt=1
+  while [ "$attempt" -le 4 ]; do
+    if "$@" >/dev/null 2>&1; then
+      return 0
+    fi
+    sleep "$delay"
+    delay=$(( delay * 2 ))
+    attempt=$(( attempt + 1 ))
+  done
+  return 1
+}
+
+# (Ri)aggiungi il marketplace e installa a livello utente. Se non c'è rete verso
+# GitHub, questi falliscono in silenzio e riproveremo al prossimo avvio.
+retry claude plugin marketplace add "$MARKET_REPO" || true
+retry claude plugin install "$PLUGIN" --scope user || true
+
+exit 0
